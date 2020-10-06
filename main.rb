@@ -120,9 +120,9 @@ def multiply_els(array)
   array.my_inject(1) { |multiple, i| multiple * i }
 end
 
-[1, 2, 3, 4, 5].my_each { |x| puts x}
+[1, 2, 3, 4, 5].my_each { |x| puts x }
 
-[1, 2, 3, 4, 5].my_each_with_index { |x, y| puts "#{x} and #{y}"}
+[1, 2, 3, 4, 5].my_each_with_index { |x, y| puts "#{x} and #{y}" }
 
 [1, 2, 3, 4, 5].my_select { |x| puts x if x.even? }
 
@@ -133,8 +133,6 @@ puts [1, 2, 3, 4, 5].my_any?(Integer)
 puts [1, 2, 3, 4, 5].my_none?(Integer)
 
 puts [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_count
-
-print [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_map { |x| x + 3}
 
 puts
 
