@@ -22,23 +22,23 @@ module Enumerable
     return to_enum unless block_given?
 
     select = []
-    my_each { |x| select.push(x) if yield(x)}
+    my_each { |x| select.push(x) if yield(x) }
     select
   end
 
   def my_all?(args = nil)
     if !args.nil? # if arguments or method parameters were given
       if args.is_a?(Class)
-        my_each { |i| return false unless i.is_a?(args)}
+        my_each { |i| return false unless i.is_a?(args) }
       elsif args.is_a?(Regexp)
-        my_each { |i| return false unless arg.match(i.to_s)}
+        my_each { |i| return false unless arg.match(i.to_s) }
       else
-        my_each { |i| return false unless i == args}
+        my_each { |i| return false unless i == args }
       end
     elsif block_given? # if block was given
-      my_each { |_i| false unless yield(x)}
+      my_each { |_i| false unless yield(x) }
     else
-      my_each { |i| false unless i}
+      my_each { |i| false unless i }
     end
     true
   end
@@ -46,16 +46,16 @@ module Enumerable
   def my_any?(args = nil)
     if !args.nil? # if arguments or method parameters were given
       if args.is_a?(Class)
-        my_each { |i| return true if i.is_a?(args)}
+        my_each { |i| return true if i.is_a?(args) }
       elsif args.is_a?(Regexp)
-        my_each { |i| return true if arg.match(i.to_s)}
+        my_each { |i| return true if arg.match(i.to_s) }
       else
-        my_each { |i| return true if i == args}
+        my_each { |i| return true if i == args }
       end
     elsif block_given? # if block was given
-      my_each { |_i| true if yield(x)}
+      my_each { |_i| true if yield(x) }
     else
-      my_each { |i| true if i}
+      my_each { |i| true if i }
     end
     false
   end
@@ -63,16 +63,16 @@ module Enumerable
   def my_none?(args = nil)
     if !args.nil? # if arguments or method parameters were given
       if args.is_a?(Class)
-        my_each { |i| return false if i.is_a?(args)}
+        my_each { |i| return false if i.is_a?(args) }
       elsif args.is_a?(Regexp)
-        my_each { |i| return false if arg.match(i.to_s)}
+        my_each { |i| return false if arg.match(i.to_s) }
       else
-        my_each { |i| return false if i == args}
+        my_each { |i| return false if i == args }
       end
     elsif block_given? # if block was given
-      my_each { |_i| false if yield(x)}
+      my_each { |_i| false if yield(x) }
     else
-      my_each { |i| false if i}
+      my_each { |i| false if i }
     end
     true
   end
@@ -80,9 +80,9 @@ module Enumerable
   def my_count(args = nil)
     total = 0
     if block_given? # block was stated and args is nil
-      my_each { |i| total += 1 if yield(i)}
+      my_each { |i| total += 1 if yield(i) }
     elsif !args.nil? # block wasn't stated and args isnot nil
-      my_each { |i| total += 1 if i == args}
+      my_each { |i| total += 1 if i == args }
     else
       return size
     end
@@ -93,7 +93,7 @@ module Enumerable
     return to_enum(:my_map) unless block_given?
 
     mapped = []
-    my_each { |i| mapped << block.call(i)}
+    my_each { |i| mapped << block.call(i) }
     mapped
   end
 
@@ -117,7 +117,7 @@ module Enumerable
 end
 
 def multiply_els(array)
-  array.my_inject(1) { |multiple, i| multiple * i}
+  array.my_inject(1) { |multiple, i| multiple * i }
 end
 
 [1, 2, 3, 4, 5].my_each { |x| puts x}
