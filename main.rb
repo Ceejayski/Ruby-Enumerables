@@ -3,8 +3,10 @@ module Enumerable
     return to_enum unless block_given?
 
     array = to_a
-    for index in (0..array.size - 1) do
+    index = 0
+    while index < size
       yield(array[index])
+      index += 1
     end
     array
   end
@@ -14,8 +16,10 @@ module Enumerable
     return to_enum unless block_given?
 
     array = to_a
-    for index in (0..array.size - 1) do
+    index = 0
+    while index < size
       yield(array[index], index)
+      index += 1
     end
     array
   end
