@@ -30,10 +30,11 @@ module Enumerable
 
   def my_all?(args = nil)
     if !args.nil? # if arguments or method parameters were given
-      if args.is_a?(Class)
+      case args
+      when Class
         my_each { |i| return false unless i.is_a?(args) }
-      elsif args.is_a?(Regexp)
-        my_each { |i| return false unless args.match(i.to_s)}
+      when Regexp
+        my_each { |i| return false unless args.match(i.to_s) }
       else
         my_each { |i| return false unless i == args }
       end
@@ -47,9 +48,10 @@ module Enumerable
 
   def my_any?(args = nil)
     if !args.nil? # if arguments or method parameters were given
-      if args.is_a?(Class)
+      case args
+      when Class
         my_each { |i| return true if i.is_a?(args) }
-      elsif args.is_a?(Regexp)
+      when Regexp
         my_each { |i| return true if args.match(i.to_s) }
       else
         my_each { |i| return true if i == args }
@@ -64,9 +66,10 @@ module Enumerable
 
   def my_none?(args = nil)
     if !args.nil? # if arguments or method parameters were given
-      if args.is_a?(Class)
+      case args
+      when Class
         my_each { |i| return false if i.is_a?(args) }
-      elsif args.is_a?(Regexp)
+      when Regexp
         my_each { |i| return false if args.match(i.to_s) }
       else
         my_each { |i| return false if i == args }
@@ -136,17 +139,10 @@ puts [1, 2, 3, 4, 5].my_all?(Integer)
 
 puts [1, 2, 3, 4, 5].my_any?(Integer)
 
-puts [1, 2, 3, 4, 5].my_all?(/d/)
+puts [1, 2, 3, 4, 5].my_none?(/d/)
 
 puts [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_count
 
 puts
 
 print [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_inject(:+)
-
-puts
-
-print (1..5).my_inject(:*)
-
-puts
-puts multiply_els([1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3])
