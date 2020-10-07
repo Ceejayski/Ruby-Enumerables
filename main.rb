@@ -1,7 +1,8 @@
 module Enumerable
   def my_each
     return to_enum unless block_given?
-    array = to_a    
+
+    array = to_a
     for index in (0..array.size - 1) do
       yield(array[index])
     end
@@ -11,7 +12,8 @@ module Enumerable
   #--------my each by index -------
   def my_each_with_index
     return to_enum unless block_given?
-      array = to_a
+
+    array = to_a
     for index in (0..array.size - 1) do
       yield(array[index], index)
     end
@@ -93,30 +95,30 @@ module Enumerable
     return to_enum(:my_map) if args.nil? && !block_given?
 
     mapped = []
-    if args.nil? #if block was given
-      my_each { |i| mapped<< block.call(i) }
-    else #if proc was given
+    if args.nil? # if block was given
+      my_each { |i| mapped << block.call(i) }
+    else # if proc was given
       my_each { |i| mapped << args.call(i) }
     end
     mapped
   end
 
   def my_inject(arg1 = nil, arg2 = nil)
-      if block_given?
-        initial = arg1
-        my_each { |item| initial = initial.nil? ? item : yield(initial, item) }
-        initial
-      elsif arg1.is_a?(Symbol) || arg1.is_a?(String)
-        initial = nil
-        my_each { |item| initial = initial.nil? ? item : initial.send(arg1, item) }
-        initial
-      elsif arg2.is_a?(Symbol) || arg2.is_a?(String)
-        initial = arg1
-        my_each { |item| initial = initial.nil? ? item : initial.send(arg2, item) }
-        initial
-      else
-        raise LocalJumpError, 'No block Given or Empty Argument' unless !arg1.nil? && !arg2.nil? && !block_given?
-      end
+    if block_given?
+      initial = arg1
+      my_each { |item| initial = initial.nil? ? item : yield(initial, item) }
+      initial
+    elsif arg1.is_a?(Symbol) || arg1.is_a?(String)
+      initial = nil
+      my_each { |item| initial = initial.nil? ? item : initial.send(arg1, item) }
+      initial
+    elsif arg2.is_a?(Symbol) || arg2.is_a?(String)
+      initial = arg1
+      my_each { |item| initial = initial.nil? ? item : initial.send(arg2, item) }
+      initial
+    else
+      raise LocalJumpError, 'No block Given or Empty Argument' unless !arg1.nil? && !arg2.nil? && !block_given?
+    end
   end
 end
 
@@ -148,7 +150,3 @@ print (1..5).my_inject(:*)
 
 puts
 puts multiply_els([1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3])
-
-my_proc = Proc.new{|x| x==3}
-
-print [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_map(my_proc)
