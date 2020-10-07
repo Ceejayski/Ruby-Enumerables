@@ -1,21 +1,21 @@
 module Enumerable
   def my_each
     return to_enum unless block_given?
-
-    (0..size - 1).each do |index|
-      yield(self[index])
+    array = to_a    
+    for index in (0..array.size - 1) do
+      yield(array[index])
     end
-    self
+    array
   end
 
   #--------my each by index -------
   def my_each_with_index
     return to_enum unless block_given?
-
-    (0..size - 1).each do |index|
-      yield(self[index], index)
+      array = to_a
+    for index in (0..array.size - 1) do
+      yield(array[index], index)
     end
-    self
+    array
   end
 
   def my_select
@@ -31,7 +31,7 @@ module Enumerable
       if args.is_a?(Class)
         my_each { |i| return false unless i.is_a?(args) }
       elsif args.is_a?(Regexp)
-        my_each { |i| return false unless arg.match(i.to_s) }
+        my_each { |i| return false unless args.match(i.to_s)}
       else
         my_each { |i| return false unless i == args }
       end
@@ -48,7 +48,7 @@ module Enumerable
       if args.is_a?(Class)
         my_each { |i| return true if i.is_a?(args) }
       elsif args.is_a?(Regexp)
-        my_each { |i| return true if arg.match(i.to_s) }
+        my_each { |i| return true if args.match(i.to_s) }
       else
         my_each { |i| return true if i == args }
       end
@@ -65,7 +65,7 @@ module Enumerable
       if args.is_a?(Class)
         my_each { |i| return false if i.is_a?(args) }
       elsif args.is_a?(Regexp)
-        my_each { |i| return false if arg.match(i.to_s) }
+        my_each { |i| return false if args.match(i.to_s) }
       else
         my_each { |i| return false if i == args }
       end
@@ -89,35 +89,39 @@ module Enumerable
     total
   end
 
-  def my_map(&block)
-    return to_enum(:my_map) unless block_given?
+  def my_map(args = nil, &block)
+    return to_enum(:my_map) if args.nil? && !block_given?
 
     mapped = []
-    my_each { |i| mapped << block.call(i) }
+    if args.nil? #if block was given
+      my_each { |i| mapped<< block.call(i) }
+    else #if proc was given
+      my_each { |i| mapped << args.call(i) }
+    end
     mapped
   end
 
   def my_inject(arg1 = nil, arg2 = nil)
-    if block_given?
-      initial = arg1
-      my_each { |item| initial = initial.nil? ? item : yield(initial, item) }
-      initial
-    elsif arg1.is_a?(Symbol) || arg1.is_a?(String)
-      initial = nil
-      my_each { |item| initial = initial.nil? ? item : initial.send(arg1, item) }
-      initial
-    elsif arg2.is_a?(Symbol) || arg2.is_a?(String)
-      initial = arg1
-      my_each { |item| initial = initial.nil? ? item : initial.send(arg2, item) }
-      initial
-    else
-      raise LocalJumpError, 'No block Given or Empty Argument' unless !arg1.nil? && !arg2.nil? && !block_given?
-    end
+      if block_given?
+        initial = arg1
+        my_each { |item| initial = initial.nil? ? item : yield(initial, item) }
+        initial
+      elsif arg1.is_a?(Symbol) || arg1.is_a?(String)
+        initial = nil
+        my_each { |item| initial = initial.nil? ? item : initial.send(arg1, item) }
+        initial
+      elsif arg2.is_a?(Symbol) || arg2.is_a?(String)
+        initial = arg1
+        my_each { |item| initial = initial.nil? ? item : initial.send(arg2, item) }
+        initial
+      else
+        raise LocalJumpError, 'No block Given or Empty Argument' unless !arg1.nil? && !arg2.nil? && !block_given?
+      end
   end
 end
 
-def multiply_els(array)
-  array.my_inject(1) { |multiple, i| multiple * i }
+def multiply_els(arr)
+  arr.my_inject(1) { |multiple, i| multiple * i }
 end
 
 [1, 2, 3, 4, 5].my_each { |x| puts x }
@@ -130,7 +134,7 @@ puts [1, 2, 3, 4, 5].my_all?(Integer)
 
 puts [1, 2, 3, 4, 5].my_any?(Integer)
 
-puts [1, 2, 3, 4, 5].my_none?(Integer)
+puts [1, 2, 3, 4, 5].my_all?(/d/)
 
 puts [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_count
 
@@ -139,4 +143,12 @@ puts
 print [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_inject(:+)
 
 puts
+
+print (1..5).my_inject(:*)
+
+puts
 puts multiply_els([1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3])
+
+my_proc = Proc.new{|x| x==3}
+
+print [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_map(my_proc)
