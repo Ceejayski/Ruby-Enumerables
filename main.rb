@@ -1,5 +1,5 @@
 module Enumerable
-  def my_each
+  def my_each(&block)
     return to_enum unless block_given?
 
     range = self
@@ -16,7 +16,7 @@ module Enumerable
   end
 
   #--------my each by index -------
-  def my_each_with_index
+  def my_each_with_index(&block)
     return to_enum unless block_given?
 
     range = self
@@ -32,7 +32,7 @@ module Enumerable
     array
   end
 
-  def my_select
+  def my_select(&block)
     return to_enum unless block_given?
 
     select = []
@@ -40,7 +40,7 @@ module Enumerable
     select
   end
 
-  def my_all?(args = nil)
+  def my_all?(args = nil, &block)
     if block_given?
       my_each { |x| return false unless yield(x) }
     elsif !args.nil?
@@ -58,7 +58,7 @@ module Enumerable
     true
   end
 
-  def my_any?(args = nil)
+  def my_any?(args = nil, &block)
     if block_given?
       my_each { |x| return true if yield(x) }
     elsif !args.nil?
@@ -76,7 +76,7 @@ module Enumerable
     false
   end
 
-  def my_none?(args = nil)
+  def my_none?(args = nil, &block)
     if block_given?
       my_each { |x| return false if yield(x) }
     elsif !args.nil?
@@ -94,7 +94,7 @@ module Enumerable
     true
   end
 
-  def my_count(args = nil)
+  def my_count(args = nil, &block)
     total = 0
     if block_given? # block was stated and args is nil
       my_each { |i| total += 1 if yield(i) }
@@ -118,7 +118,7 @@ module Enumerable
     mapped
   end
 
-  def my_inject(arg1 = nil, arg2 = nil)
+  def my_inject(arg1 = nil, arg2 = nil, &block)
     if block_given?
       initial = arg1
       my_each { |item| initial = initial.nil? ? item : yield(initial, item) }
@@ -162,3 +162,7 @@ print [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_inject(:+)
 true_array = [nil, false, true, []]
 
 puts true_array.my_any?
+
+my_proc = Proc.new{|x| puts x}
+
+[1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_each(&my_proc)
