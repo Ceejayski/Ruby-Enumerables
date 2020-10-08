@@ -28,7 +28,7 @@ module Enumerable
     return to_enum unless block_given?
 
     select = []
-    my_each { |x| select.push(x) if yield(x) }
+    my_each { |i| select.push(i) if yield(i) }
     select
   end
 
