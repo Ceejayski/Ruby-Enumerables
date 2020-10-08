@@ -43,7 +43,7 @@ module Enumerable
         my_each { |i| return false unless i == args }
       end
     elsif block_given? # if block was given
-      my_each { |_i| false unless yield(x) }
+      my_each { |i| false unless yield(i) }
     else
       my_each { |i| false unless i }
     end
@@ -61,7 +61,7 @@ module Enumerable
         my_each { |i| return true if i == args }
       end
     elsif block_given? # if block was given
-      my_each { |_i| true if yield(x) }
+      my_each { |i| true if yield(i) }
     else
       my_each { |i| true if i }
     end
@@ -71,7 +71,7 @@ module Enumerable
   def my_none?(args = nil)
     if !args.nil? # if arguments or method parameters were given
       case args
-      when Class
+      when Class 
         my_each { |i| return false if i.is_a?(args) }
       when Regexp
         my_each { |i| return false if args.match(i.to_s) }
@@ -79,7 +79,7 @@ module Enumerable
         my_each { |i| return false if i == args }
       end
     elsif block_given? # if block was given
-      my_each { |_i| false if yield(x) }
+      my_each { |i| false if yield(i) }
     else
       my_each { |i| false if i }
     end
