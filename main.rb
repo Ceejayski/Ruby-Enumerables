@@ -2,12 +2,16 @@ module Enumerable
   def my_each
     return to_enum unless block_given?
 
+    range = self
+    range_check = true if is_a?(Range)
     array = to_a
     index = 0
     while index < size
       yield(array[index])
       index += 1
     end
+    return range if range_check == true
+
     array
   end
 
@@ -15,12 +19,16 @@ module Enumerable
   def my_each_with_index
     return to_enum unless block_given?
 
+    range = self
+    range_check = true if is_a?(Range)
     array = to_a
     index = 0
     while index < size
       yield(array[index], index)
       index += 1
     end
+    return range if range_check == true
+
     array
   end
 
@@ -33,55 +41,55 @@ module Enumerable
   end
 
   def my_all?(args = nil)
-    if !args.nil? # if arguments or method parameters were given
+    if block_given?
+      my_each { |x| return false unless yield(x) }
+    elsif !args.nil?
       case args
       when Class
-        my_each { |i| return false unless i.is_a?(args) }
+        my_each { |x| return false unless x.is_a?(args) }
       when Regexp
-        my_each { |i| return false unless args.match(i.to_s) }
+        my_each { |x| return false unless args.match(x.to_s) }
       else
-        my_each { |i| return false unless i == args }
+        my_each { |x| return false unless x == args }
       end
-    elsif block_given? # if block was given
-      my_each { |i| false unless yield(i) }
     else
-      my_each { |i| false unless i }
+      my_each { |x| return false unless x }
     end
     true
   end
 
   def my_any?(args = nil)
-    if !args.nil? # if arguments or method parameters were given
+    if block_given?
+      my_each { |x| return true if yield(x) }
+    elsif !args.nil?
       case args
       when Class
-        my_each { |i| return true if i.is_a?(args) }
+        my_each { |x| return true if x.is_a?(args) }
       when Regexp
-        my_each { |i| return true if args.match(i.to_s) }
+        my_each { |x| return true if args.match(x.to_s) }
       else
-        my_each { |i| return true if i == args }
+        my_each { |x| return true if x == args }
       end
-    elsif block_given? # if block was given
-      my_each { |i| true if yield(i) }
     else
-      my_each { |i| true if i }
+      my_each { |x| return true if x }
     end
     false
   end
 
   def my_none?(args = nil)
-    if !args.nil? # if arguments or method parameters were given
+    if block_given?
+      my_each { |x| return false if yield(x) }
+    elsif !args.nil?
       case args
       when Class
-        my_each { |i| return false if i.is_a?(args) }
+        my_each { |x| return false if x.is_a?(args) }
       when Regexp
-        my_each { |i| return false if args.match(i.to_s) }
+        my_each { |x| return false if args.match(x.to_s) }
       else
-        my_each { |i| return false if i == args }
+        my_each { |x| return false if x == args }
       end
-    elsif block_given? # if block was given
-      my_each { |i| false if yield(i) }
     else
-      my_each { |i| false if i }
+      my_each { |x| return false if x }
     end
     true
   end
@@ -150,3 +158,7 @@ puts [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_count
 puts
 
 print [1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3].my_inject(:+)
+
+true_array = [nil, false, true, []]
+
+puts true_array.my_any?
