@@ -71,7 +71,7 @@ module Enumerable
   def my_none?(args = nil)
     if !args.nil? # if arguments or method parameters were given
       case args
-      when Class 
+      when Class
         my_each { |i| return false if i.is_a?(args) }
       when Regexp
         my_each { |i| return false if args.match(i.to_s) }
