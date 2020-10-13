@@ -2,15 +2,14 @@ module Enumerable
   def my_each(*)
     return to_enum unless block_given?
 
-    range = self
-    range_check = true if is_a?(Range)
+    range_check = is_a?(Range)
     array = to_a
     index = 0
     while index < size
       yield(array[index])
       index += 1
     end
-    return range if range_check == true
+    return self if range_check == true
 
     array
   end
@@ -18,16 +17,14 @@ module Enumerable
   #--------my each by index -------
   def my_each_with_index(*)
     return to_enum unless block_given?
-
-    range = self
-    range_check = true if is_a?(Range)
+    range_check = is_a?(Range)
     array = to_a
     index = 0
     while index < size
       yield(array[index], index)
       index += 1
     end
-    return range if range_check == true
+    return self if range_check == true
 
     array
   end
